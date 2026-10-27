@@ -1,0 +1,82 @@
+---
+import { getEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import ProfileHeader from '../components/ProfileHeader.astro';
+import LinkCard from '../components/LinkCard.astro';
+import NewsletterCard from '../components/NewsletterCard.astro';
+import Footer from '../components/Footer.astro';
+
+// Fetch structured collections
+const profileEntry = await getEntry('profile', 'alex');
+const linksEntry = await getEntry('links', 'links');
+
+if (!profileEntry || !linksEntry) {
+	throw new Error('Missing profile or links collection entry.');
+}
+
+const profile = profileEntry.data;
+const allLinks = linksEntry.data.items;
+
+// Group links by category, maintaining order
+const categories = Array.from(new Set(allLinks.map((item) => item.category)));
+
+let globalIndex = 1;
+---
+
+<BaseLayout
+	title={`${profile.name} (${profile.handle}) — Links`}
+	description={`${profile.tagline}. ${profile.bio}`}
+>
+	<Header />
+
+	<main class="shell-container flex-1 pb-12">
+		<!-- Profile hero presentation -->
+		<ProfileHeader profile={profile} />
+
+		<!-- Links grouped by categories with Swiss typographic headers -->
+		<div class="space-y-8 mt-6">
+			{categories.map((category, catIdx) => {
+				const categoryLinks = allLinks.filter((l) => l.category === category);
+				return (
+					<section aria-labelledby={`cat-${category.toLowerCase().replace(/\s+/g, '-')}`}>
+						<div class="mb-3">
+							<div class="swiss-category-header">
+								<h2
+									id={`cat-${category.toLowerCase().replace(/\s+/g, '-')}`}
+									class="m-0 text-inherit font-inherit"
+								>
+									{category}
+								</h2>
+								<span class="font-mono text-[11px] text-[#ff3300]">
+									0{catIdx + 1}
+								</span>
+							</div>
+						</div>
+						<div class="flex flex-col gap-3">
+							{categoryLinks.map((link) => {
+								const idxStr = String(globalIndex++).padStart(2, '0');
+								return (
+									<LinkCard
+										id={link.id}
+										title={link.title}
+										subtitle={link.subtitle}
+										url={link.url}
+										icon={link.icon}
+										featured={link.featured}
+										indexNumber={idxStr}
+									/>
+								);
+							})}
+						</div>
+					</section>
+				);
+			})}
+
+			<!-- Lead capture / Newsletter subscription widget -->
+			<NewsletterCard />
+		</div>
+	</main>
+
+	<Footer />
+</BaseLayout>

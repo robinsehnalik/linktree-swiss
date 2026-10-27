@@ -1,0 +1,34 @@
+---
+import { getSite } from '../utils/consts';
+
+const site = await getSite();
+const today = new Date();
+---
+
+<footer class="mt-14 mb-10 text-xs font-mono font-bold text-[#111111]">
+	<div class="shell-container">
+		<div class="border-t-[2px] border-[#111111] pt-6 flex flex-col sm:flex-row items-center sm:items-baseline justify-between gap-4 text-center sm:text-left">
+			<!-- Col 1: Copyright -->
+			<div class="flex items-center gap-2 shrink-0">
+				<span class="w-2.5 h-2.5 bg-[#ff3300] inline-block shrink-0"></span>
+				<p class="m-0 text-[11px] uppercase tracking-wider font-black">
+					&copy;&nbsp;{today.getFullYear()}&nbsp;{site.author ?? 'ALEX VANCE'}.
+				</p>
+			</div>
+
+			<!-- Col 2: Navigation Links -->
+			<nav aria-label="Legal" class="flex items-center gap-2.5 text-[11px] uppercase tracking-widest font-bold">
+				<a href="#privacy" class="hover:text-[#ff3300] transition-colors">PRIVACY</a>
+				<span class="text-[#888888]">/</span>
+				<a href="#terms" class="hover:text-[#ff3300] transition-colors">TERMS</a>
+				<span class="text-[#888888]">/</span>
+				<a href="mailto:hello@alexvance.io" class="hover:text-[#ff3300] transition-colors">CONTACT</a>
+			</nav>
+
+			<!-- Col 3: Attribution -->
+			<div class="text-[10px] uppercase tracking-wider text-[#666666] font-mono shrink-0">
+				DESIGN:&nbsp;<a href="https://sehnalik.com" target="_blank" rel="noopener noreferrer" class="text-[#111111] font-black hover:text-[#ff3300] hover:underline">ROBIN SEHNALÍK</a>
+			</div>
+		</div>
+	</div>
+</footer>

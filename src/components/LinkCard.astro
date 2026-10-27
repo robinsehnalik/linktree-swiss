@@ -1,0 +1,59 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+	id: string;
+	title: string;
+	subtitle?: string;
+	url: string;
+	icon?: string;
+	featured?: boolean;
+	indexNumber?: string;
+}
+
+const { title, subtitle, url, icon, featured = false, indexNumber = "01" } = Astro.props;
+const isExternal = url.startsWith('http://') || url.startsWith('https://');
+---
+
+<a
+	href={url}
+	target={isExternal ? '_blank' : undefined}
+	rel={isExternal ? 'noopener noreferrer' : undefined}
+	class:list={[
+		'swiss-card group',
+		{ 'featured-card': featured }
+	]}
+>
+	<!-- Left Index Column -->
+	<div class="swiss-index">
+		{indexNumber}
+	</div>
+
+	<!-- Icon container -->
+	{icon && (
+		<div class="flex items-center justify-center w-12 border-r-[1.5px] border-[#111111] bg-white text-[#111111] group-hover:text-[#ff3300] shrink-0 transition-colors">
+			<Icon name={icon} size="1.3em" />
+		</div>
+	)}
+
+	<!-- Content text -->
+	<div class="flex-1 min-w-0 py-3 px-4">
+		<span class="block font-black text-[0.9375rem] uppercase tracking-tight text-[#111111] group-hover:text-[#ff3300] transition-colors truncate">
+			{title}
+		</span>
+		{subtitle && (
+			<p class="text-xs font-mono font-medium text-[#666666] truncate mt-0.5 m-0">
+				{subtitle}
+			</p>
+		)}
+	</div>
+
+	<!-- Trailing Arrow Indicator -->
+	<div class="flex items-center justify-center w-11 border-l-[1.5px] border-[#111111] bg-white text-[#111111] group-hover:bg-[#ff3300] group-hover:text-white group-hover:border-[#ff3300] transition-colors duration-100 shrink-0">
+		{isExternal ? (
+			<Icon name="tabler:arrow-up-right" size="1.2em" class="stroke-[2.5]" />
+		) : (
+			<Icon name="tabler:arrow-right" size="1.2em" class="stroke-[2.5]" />
+		)}
+	</div>
+</a>
